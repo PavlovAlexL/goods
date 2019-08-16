@@ -23,7 +23,11 @@ public class StartUi {
         do{
             try {
                 command = consoleInput.ask("Введите команду:");
+                if(command.equals("repeat")){
+                    continue;
+                }
 
+                System.out.println(command);
 
             } catch (WrongInputException e){
                 System.out.println(e.getMessage());
