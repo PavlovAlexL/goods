@@ -23,12 +23,14 @@ COMMENT ON COLUMN Storage.date IS 'Дата';
 
 CREATE TABLE IF NOT EXISTS Sales(
 id              INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
+name            VARCHAR(50) NOT NULL,
 amount          INTEGER NOT NULL,
-avg_price       DECIMAL NOT NULL,
+price           DECIMAL NOT NULL,
 date            DATE NOT NULL
 );
 COMMENT ON TABLE  Sales IS 'Продажи';
-COMMENT ON COLUMN Sales.id IS 'Идентификатор заказа';
+COMMENT ON COLUMN Sales.id IS 'Идентификатор';
+COMMENT ON COLUMN Sales.name IS 'Наименование';
 COMMENT ON COLUMN Sales.amount IS 'Количество';
 COMMENT ON COLUMN Sales.price IS 'Цена';
 COMMENT ON COLUMN Sales.date IS 'Дата';

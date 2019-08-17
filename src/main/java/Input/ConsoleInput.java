@@ -26,6 +26,10 @@ public class ConsoleInput implements Input{
             return "repeat";
         }
 
+        if(answer.equals("exit")){
+            return "exit";
+        }
+
         if(!validate(answer)){
             throw new WrongInputException("Wrong input" + "\n" + "Try 'help' for more information.");
         }
@@ -88,7 +92,6 @@ public class ConsoleInput implements Input{
 
         return false;
     }
-
 
     private boolean validateDate(String value) {
         String datePattern = "dd.MM.yyyy";
