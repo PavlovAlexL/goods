@@ -13,7 +13,7 @@ public class ConsoleInput implements Input{
 
     public String ask(String question) {
 
-        System.out.println(question);
+        //System.out.println(question);
 
         String answer = scanner.nextLine();
 

@@ -9,9 +9,12 @@ import DataSources.Product;
 import Exceptions.WrongInputException;
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Goods {
 
@@ -43,7 +46,7 @@ public class Goods {
                 amount = Integer.parseInt(result[2]);
                 price = parsePrice(result[3]);
                 date = parseDate(result[4]);
-                purchase(new Item(name, amount, price, date));
+                purchase(name, amount, price, date);
                 break;
 
             case "DEMAND":
@@ -51,7 +54,7 @@ public class Goods {
                 amount = Integer.parseInt(result[2]);
                 price = parsePrice(result[3]);
                 date = parseDate(result[4]);
-                demand(new Item(name, amount, price, date));
+                demand(name, amount, price, date);
                 break;
 
             case "SALESREPORT":
@@ -65,15 +68,24 @@ public class Goods {
     }
 
     private void newProduct(Product product){
+
         productDao.newProduct(product, connection);
     }
 
-    private void purchase(Item item){
-        storeDao.Purchase(item);
+    private void purchase(String name, Integer amount, BigDecimal price, Date date){
+        List <Item> order = new ArrayList<>();
+        for(int i = 0; i < amount; i++ ){
+            order.add(new Item(name, price, date));
+        }
+        storeDao.Purchase(order, connection);
     }
 
-    private void demand (Item item){
-        storeDao.Demand(item);
+    private void demand (String name, Integer amount, BigDecimal price, Date date){
+        List <Item> order = new ArrayList<>();
+        for(int i = 0; i < amount; i++ ){
+            order.add(new Item(name, price, date));
+        }
+        storeDao.Demand(order, connection);
     }
 
     private void salesReport (String name, Date date){

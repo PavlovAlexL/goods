@@ -1,6 +1,7 @@
 package DataSources;
 
 public class Product {
+    private Long id;
     private String name;
 
     public Product(String name) {

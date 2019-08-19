@@ -1,7 +1,5 @@
 package Service;
 
-import org.h2.jdbcx.JdbcDataSource;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -14,11 +12,11 @@ import java.util.Set;
 
 public class DBService implements AutoCloseable{
 
-    private static final String DB_URL = "jdbc:h2:./h2db";
+    private static final String DB_URL = "jdbc:h2:./goods";
     private static final String DB_USER = "user";
-    private static final String DB_PASS = "password";
+    private static final String DB_PASS = "1234";
     private static final String DATA_BASE_SCHEMA = "schema.sql";
-    private Connection connection;
+    private static Connection connection;
 
     public DBService() {
         connectToDB();
@@ -26,7 +24,10 @@ public class DBService implements AutoCloseable{
     }
 
     public Connection getConnection() {
-        return connection;
+        if(connection != null) {
+            return connection;
+        }
+        return connectToDB();
     }
 
     private Connection connectToDB(){
@@ -106,7 +107,7 @@ public class DBService implements AutoCloseable{
             sqlStatements.add(sqlStatement);
         }
 
-        System.out.println("reading file %s success");
+        System.out.println("reading file success");
 
         return sqlStatements;
     }
@@ -123,7 +124,7 @@ public class DBService implements AutoCloseable{
 
     private void executeSqlStatements(Set<String> sqlStatements) throws Exception {
 
-        try (Connection connection = this.getConnection(); Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement()) {
             try {
                 connection.setAutoCommit(false);
                 for (String sqlStatement : sqlStatements) {
@@ -140,12 +141,13 @@ public class DBService implements AutoCloseable{
     public void cleanUp() {
         try {
             Statement stmt = connection.createStatement();
-            stmt.execute("drop schema H2DB ");
+            stmt.execute("drop schema goods ");
             stmt.close();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-
 }
+
