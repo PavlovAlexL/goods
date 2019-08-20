@@ -1,7 +1,14 @@
 package Input;
 
+/**
+ * Интерфейс ввода данных.
+ */
 public interface Input {
-
-    public String ask(String question);
+    /**
+     * Приглашение на ввод комманды.
+     * @param question Текст приглашения.
+     * @return Комманда.
+     */
+    String ask(String question);
 
 }

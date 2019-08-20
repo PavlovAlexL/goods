@@ -9,13 +9,15 @@ import DataSources.Product;
 import Exceptions.WrongInputException;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Основной сервис-бизнесспроцесс.
+ */
 public class Goods {
 
     private ProductDao productDao = new ProductDaoImpl();
@@ -27,6 +29,10 @@ public class Goods {
         this.connection = connection;
     }
 
+    /**
+     * Метод, выбирающий соответствующую комманде функцию.
+     * @param command Вводимые данные.
+     */
     public void execute(String command){
         String name;
         Integer amount;
@@ -67,11 +73,22 @@ public class Goods {
         }
     }
 
+    /**
+     * Ввод нового наименования товара.
+     * @param product Наименование.
+     */
     private void newProduct(Product product){
 
         productDao.newProduct(product, connection);
     }
 
+    /**
+     * Закупка товара.
+     * @param name Наименование.
+     * @param amount Колличество.
+     * @param price Цена.
+     * @param date Дата закупки.
+     */
     private void purchase(String name, Integer amount, BigDecimal price, Date date){
         List <Item> order = new ArrayList<>();
         for(int i = 0; i < amount; i++ ){
@@ -80,6 +97,13 @@ public class Goods {
         storeDao.Purchase(order, connection);
     }
 
+    /**
+     * Продажа товара со склада.
+     * @param name Наименование.
+     * @param amount Колличество.
+     * @param price Цена.
+     * @param date Дата продажи.
+     */
     private void demand (String name, Integer amount, BigDecimal price, Date date){
         List <Item> order = new ArrayList<>();
         for(int i = 0; i < amount; i++ ){
@@ -88,10 +112,20 @@ public class Goods {
         storeDao.Demand(order, connection);
     }
 
+    /**
+     * Отчет по продажам.
+     * @param name Наименование товара.
+     * @param date Дата для формирования отчета.
+     */
     private void salesReport (String name, Date date){
-        salesDao.getReport(name, date);
+        salesDao.getReport(name, date, connection);
     }
 
+    /**
+     * Преобразует String дату в объект java.util.Date
+     * @param value Входное значение.
+     * @return Преобразованные данные.
+     */
     private Date parseDate(String value) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
         try {
@@ -103,6 +137,11 @@ public class Goods {
         }
     }
 
+    /**
+     * Преобразует String параметр в денежный BigDecimal.
+     * @param value Входное значение.
+     * @return Преобразованные данные.
+     */
     private BigDecimal parsePrice(String value) {
         BigDecimal price = BigDecimal.valueOf(Long.parseLong(value));
         return price;

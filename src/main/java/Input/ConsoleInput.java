@@ -1,49 +1,51 @@
 package Input;
 
 import Exceptions.WrongInputException;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
+/**
+ * Реализация ввода чеерз консоль
+ */
 public class ConsoleInput implements Input{
 
     private Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Метод запроса на ввод.
+     * @param question Вводимые данные.
+     * @return Валидированная комманда.
+     */
     public String ask(String question) {
 
-        //System.out.println(question);
-
+        System.out.println(question);
         String answer = scanner.nextLine();
 
-        if(answer.equals("help")){
-            System.out.println("Список допустимых комманд:" +
-                    "\n" + "NEWPRODUCT <name>" +
-                    "\n" + "PURCHASE <name> <amount> <price> <date>" +
-                    "\n" + "DEMAND <name> <amount> <price> <date>" +
-                    "\n" + "SALESREPORT <name> <date>");
-            return "repeat";
-        }
-
-        if(answer.equals("exit")){
-            return "exit";
-        }
-
         if(!validate(answer)){
-            throw new WrongInputException("Wrong input" + "\n" + "Try 'help' for more information.");
+            throw new WrongInputException("ERROR");
         }
-
         return answer;
     }
 
+    /**
+     * Метод валлидации вводимых данных.
+     * @param input комманда.
+     * @return результат.
+     */
     public Boolean validate(String input){
 
-        if(!input.matches("^.*(NEWPRODUCT |PURCHASE |DEMAND |SALESREPORT ).*")){
-            return false;
+        if(input.equals("exit")){
+            return true;
         }
 
-        String[] command = input.split("\\s");
+        String[] command = null;
+        if(input.matches("\\s")) {
+            command = input.split("\\s");
+        } else {
+            return false;
+        }
 
         switch (command[0]) {
 
@@ -89,10 +91,14 @@ public class ConsoleInput implements Input{
 
                 default:return false;
         }
-
         return false;
     }
 
+    /**
+     * Валидация даты.
+     * @param value Дата в формате String.
+     * @return Результат.
+     */
     private boolean validateDate(String value) {
         String datePattern = "dd.MM.yyyy";
         SimpleDateFormat formatter = new SimpleDateFormat(datePattern);

@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS Product (
 id                    INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
 name                  VARCHAR(50) NOT NULL UNIQUE
@@ -23,12 +22,14 @@ COMMENT ON COLUMN Storage.date IS 'Дата';
 
 CREATE TABLE IF NOT EXISTS Sales(
 id              INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
+storage_id      INTEGER NOT NULL REFERENCES Storage(id),
 name            VARCHAR(50) NOT NULL,
 price           DECIMAL NOT NULL,
 date            DATE NOT NULL
 );
 COMMENT ON TABLE  Sales IS 'Продажи';
 COMMENT ON COLUMN Sales.id IS 'Идентификатор';
+COMMENT ON COLUMN Sales.storage_id IS 'Позиция на складе';
 COMMENT ON COLUMN Sales.name IS 'Наименование';
 COMMENT ON COLUMN Sales.price IS 'Цена';
 COMMENT ON COLUMN Sales.date IS 'Дата';

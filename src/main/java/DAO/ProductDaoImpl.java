@@ -6,6 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * DAO для работы со справочником Product.
+ */
 public class ProductDaoImpl implements ProductDao {
 
     @Override
@@ -22,8 +25,15 @@ public class ProductDaoImpl implements ProductDao {
                 statement.setString(1, product.getName());
                 statement.executeUpdate();
             System.out.println("OK");
+            statement.close();
+            connection.commit();
         } catch (SQLException e){
             e.printStackTrace();
+            try{
+                connection.rollback();
+            } catch (SQLException ex){
+                throw new RuntimeException("transaction rollback error", e);
+            }
         }
     }
 }

@@ -3,9 +3,12 @@ package DataSources;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * Сущьность, хранящаяся в таблице Storage.
+ */
 public class Item {
 
-    private Long id;
+    private Integer id;
     private String name;
     private BigDecimal price;
     private Date date;
@@ -16,25 +19,41 @@ public class Item {
         this.date = date;
     }
 
-    public Item(Long id, String name, BigDecimal price, Date date) {
+    public Item(Integer id, String name, BigDecimal price, Date date) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.date = date;
     }
 
-    public Long getId() {
+    /**
+     * Геттер лдя идентификатора в БД.
+     * @return Идентификатор.
+     */
+    public Integer getId() {
         return id;
     }
 
+    /**
+     * Геттер для наименования.
+     * @return Наименование.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Геттер для цены.
+     * @return Цена.
+     */
     public BigDecimal getPrice() {
         return price;
     }
 
+    /**
+     * Геттер для даты.
+     * @return Дата.
+     */
     public Date getDate() {
         return date;
     }

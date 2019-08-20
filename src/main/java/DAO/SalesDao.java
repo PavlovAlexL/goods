@@ -1,7 +1,8 @@
 package DAO;
 
+import java.sql.Connection;
 import java.util.Date;
 
 public interface SalesDao {
-    Integer getReport(String name, Date date);
+   void getReport(String name, Date date, Connection connection);
 }

@@ -1,5 +1,8 @@
 package DataSources;
 
+/**
+ * Сущьность, хранящаяся в базе Product.
+ */
 public class Product {
     private Long id;
     private String name;
@@ -8,6 +11,10 @@ public class Product {
         this.name = name;
     }
 
+    /**
+     * Геттер лдя Имени.
+     * @return Имя.
+     */
     public String getName() {
         return name;
     }
