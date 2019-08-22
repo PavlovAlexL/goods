@@ -7,6 +7,7 @@ import DAO.StoreDaoImpl;
 import DataSources.Item;
 import DataSources.Product;
 import Exceptions.WrongInputException;
+
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.text.ParseException;
@@ -146,7 +147,5 @@ public class Goods {
         BigDecimal price = BigDecimal.valueOf(Long.parseLong(value));
         return price;
     }
-
-
 
 }

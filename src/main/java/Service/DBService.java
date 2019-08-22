@@ -3,12 +3,13 @@ package Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,13 +17,26 @@ import java.util.Set;
  */
 public class DBService implements AutoCloseable{
 
-    private static final String DB_URL = "jdbc:h2:tcp://localhost/~/goods";
-    private static final String DB_USER = "user";
-    private static final String DB_PASS = "1234";
-    private static final String DATA_BASE_SCHEMA = "schema.sql";
-    private static Connection connection;
+    private final String DB_URL;
+    private final String DB_USER;
+    private final String DB_PASS;
+    private final String DATA_BASE_SCHEMA;
+    private Connection connection;
 
     public DBService() {
+        this.DB_URL = "jdbc:h2:./goods";
+        this.DB_USER = "user";
+        this.DB_PASS = "1234";
+        this.DATA_BASE_SCHEMA = "schema.sql";
+        connectToDB();
+        initializeDB();
+    }
+
+    public DBService(String db_url, String db_user, String db_pass, String schems) {
+        this.DB_URL = db_url;
+        this.DB_USER = db_user;
+        this.DB_PASS = db_pass;
+        this.DATA_BASE_SCHEMA = schems;
         connectToDB();
         initializeDB();
     }
@@ -159,5 +173,20 @@ public class DBService implements AutoCloseable{
         connection.commit();
     }
 
-}
+   ///**
+   // * Очистка данных всех таблиц.
+   // */
+   //public void dropAllData() {
+   //    try {
+   //        List<String> list = Arrays.asList("Sales", "Storage", "Product");
+   //        Statement statement = connection.createStatement();
+   //        statement.executeUpdate("DELETE FROM Storage WHERE id > 0");
+   //        statement.executeUpdate("DELETE FROM Sales WHERE id > 0");
+   //        statement.executeUpdate("DELETE FROM Product WHERE id > 0");
+   //        connection.commit();
+   //    } catch (SQLException e) {
+   //    }
 
+   //}
+
+}

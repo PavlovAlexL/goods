@@ -9,6 +9,7 @@ public interface Input {
      * @param question Текст приглашения.
      * @return Комманда.
      */
+
     String ask(String question);
 
 }

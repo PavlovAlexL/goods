@@ -1,116 +1,187 @@
 package DAO;
 
 import DataSources.Item;
+
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-
+/**
+ * DAO для работы с таблицей Store.
+ */
 public class StoreDaoImpl implements StoreDao{
 
+    private String transactionProductName;
+    private Integer transactionProductId;
+    private Integer transactionItemsAmount;
+    private BigDecimal transactionItemPrice;
+    private java.sql.Date transactionDate;
+
+    /**
+     * Закупка партии товара.
+     *
+     * @param order      Список, содержащий закупленный товар.
+     * @param connection Соединение с БД.
+     */
     @Override
     public void Purchase(List<Item> order, Connection connection) {
 
-        try{
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO Storage(name, amount, price, date) VALUES (?,?,?,?)");
-            statement.setString(1, order.get(0).getName());
-            statement.setInt(2, order.size());
-            statement.setBigDecimal(3, order.get(0).getPrice());
-            statement.setDate(4,new java.sql.Date(order.get(0).getDate().getTime()));
+        try {
+            fillFields(order, connection);
+            if (transactionProductId < 1) {
+                System.out.print("ERROR");
+                return;
+            }
+
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO Storage(product_id, amount, price, date) VALUES (?,?,?,?)");
+            statement.setInt(1, transactionProductId);
+            statement.setInt(2, transactionItemsAmount);
+            statement.setBigDecimal(3, transactionItemPrice);
+            statement.setDate(4, transactionDate);
             statement.executeUpdate();
-            System.out.println("OK");
+            System.out.print("OK");
             connection.commit();
         } catch (SQLException e){
             try{
                 connection.rollback();
-            } catch (SQLException ex){
-                throw new RuntimeException("transaction rollback error", e);
+            } catch (SQLException ex) {
+                throw new RuntimeException("transaction rollback error", ex);
             }
         }
     }
 
+    /**
+     * Продажа партии товара.
+     *
+     * @param order      Список проданных товаров.
+     * @param connection Соединение с БД.
+     */
     @Override
     public void Demand(List<Item> order, Connection connection) {
-        String demandName = order.get(0).getName();
-        Integer demandAmount = order.size();
-        BigDecimal demandPrice = order.get(0).getPrice();
-        Date demandDate = order.get(0).getDate();
+        fillFields(order, connection);
+        if (transactionProductId < 1) {
+            System.out.print("ERROR");
+            return;
+        }
 
-        try{
-            PreparedStatement statement = connection.prepareStatement("SELECT SUM(amount) FROM Storage WHERE name = ?");
-            statement.setString(1, demandName);
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT SUM(amount) FROM Storage WHERE product_id = ?");
+            statement.setInt(1, transactionProductId);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            if(resultSet.getInt(1) < demandAmount){
-                System.out.println("ERROR");
-connection.rollback();
-statement.close();
+
+            if (resultSet.getInt(1) < transactionItemsAmount) {
+                System.out.print("ERROR");
+                connection.rollback();
+                statement.close();
                 return;
             }
-connection.commit();
 
-            statement = connection.prepareStatement( "SELECT id, name, amount, price, date FROM Storage WHERE amount > 0 ");//AND name = ? ORDER BY date");
-            // statement.setString(1, "name");
+            statement = connection.prepareStatement("SELECT id, product_id, amount, price, date FROM Storage WHERE amount > 0 AND product_id = ? ORDER BY date");
+            statement.setInt(1, transactionProductId);
             resultSet = statement.executeQuery();
 
             List <Item> result = new ArrayList<>();
             Integer id;
-            String name;
+            Integer prductId;
             Integer amount;
-            BigDecimal price;
+            BigDecimal itemPrice;
             Date date;
 
             while(resultSet.next()){
                 id = resultSet.getInt("id");
-                name = resultSet.getString("name");
+                prductId = resultSet.getInt("product_id");
                 amount = resultSet.getInt("amount");
-                price = resultSet.getBigDecimal("price");
+                itemPrice = resultSet.getBigDecimal("price");
                 date = resultSet.getDate("date");
 
-                if(demandAmount > result.size()) {
+                if (transactionItemsAmount > result.size()) {
                     while (amount-- != 0) {
-                        result.add(new Item(id, name, price, date));
-                        if (result.size() == demandAmount) {
+                        result.add(new Item(id, prductId, itemPrice, date));
+                        if (result.size() == transactionItemsAmount) {
                             break;
                         }
                     }
                 }
-                if(demandAmount == result.size()){
+                if (transactionItemsAmount == result.size()){
                     break;
                 }
             }
-connection.commit();
+
             statement = connection.prepareStatement("UPDATE Storage SET amount = amount - 1 WHERE id = ?");
             for(Item item : result){
                 statement.setLong(1,item.getId());
                 statement.executeUpdate();
             }
-connection.commit();
-            statement = connection.prepareStatement("INSERT INTO Sales(name, storage_id, price, date) VALUES (?,?,?,?)");
-            for(Item item : result){
-                statement.setString(1, item.getName());
-                statement.setInt(2, item.getId());
-                statement.setBigDecimal(3,demandPrice);
-                statement.setDate(4, new java.sql.Date(demandDate.getTime()));
+
+            statement = connection.prepareStatement("INSERT INTO Sales(storage_id, price, date) VALUES (?,?,?)");
+            for (Item item : result) {
+                statement.setInt(1, item.getId());
+                statement.setBigDecimal(2, transactionItemPrice);
+                statement.setDate(3, transactionDate);
                 statement.executeUpdate();
             }
 
-connection.commit();
-            System.out.println("OK");
-        } catch (SQLException e){
-            System.out.println("ERROR");
-            try{
+            connection.commit();
+            System.out.print("OK");
+        } catch (SQLException e) {
+            System.out.print("ERROR");
+            try {
                 connection.rollback();
-            } catch (SQLException ex){
-                throw new RuntimeException("transaction rollback error", e);
+            } catch (SQLException ex) {
+                throw new RuntimeException("transaction rollback error", ex);
             }
         }
 
 
+    }
+
+    /**
+     * Заполнение полей класса данными по закупке/продаже.
+     *
+     * @param order
+     * @param connection
+     */
+    private void fillFields(List<Item> order, Connection connection) {
+        transactionProductName = order.get(0).getName();
+        transactionProductId = getProductId(transactionProductName, connection);
+        transactionItemsAmount = order.size();
+        transactionItemPrice = order.get(0).getPrice();
+        transactionDate = new java.sql.Date(order.get(0).getDate().getTime());
+    }
+
+    /**
+     * Получить Product_Id по наименованию товара.
+     *
+     * @param name       Наименование.
+     * @param connection Соединение с БД.
+     * @return Идентификатор.
+     */
+    private Integer getProductId(String name, Connection connection) {
+        Integer productId = 0;
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT id FROM Product WHERE name = ?");
+            statement.setString(1, name);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                productId = resultSet.getInt(1);
+            }
+            connection.commit();
+
+            return productId;
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException("transaction rollback error", ex);
+            }
+        }
+        return productId;
     }
 }

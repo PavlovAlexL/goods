@@ -9,6 +9,7 @@ import java.util.Date;
 public class Item {
 
     private Integer id;
+    private Integer productId;
     private String name;
     private BigDecimal price;
     private Date date;
@@ -19,9 +20,9 @@ public class Item {
         this.date = date;
     }
 
-    public Item(Integer id, String name, BigDecimal price, Date date) {
+    public Item(Integer id, Integer productId, BigDecimal price, Date date) {
         this.id = id;
-        this.name = name;
+        this.productId = productId;
         this.price = price;
         this.date = date;
     }
