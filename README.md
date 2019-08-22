@@ -7,7 +7,7 @@ Name: ```JAVA_HOME```, Value:```C:\Program Files\Java\jdk1.8.0_131```
 and add to path:```;%JAVA_HOME%\bin```
 Check installation:in cmd ```echo %JAVA_HOME%```
 You must get ```java -version```
-3. Install maven http://apache-mirror.rbc.ru/pub/apache/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz
+3. Install maven http://apache-mirror.rbc.ru/pub/apache/maven/maven-3/3.6.1/binaries/apache-maven-3.6.1-bin.zip
 Extract archive to c:/maven, or other.
 add local variables:Name:```M2_HOME```, Value:```c:/maven```
 add to path:```;%M2_HOME%\bin```
