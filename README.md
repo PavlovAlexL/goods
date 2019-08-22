@@ -22,10 +22,11 @@ Ok->Open as Project
 
 ###Using
 You must use only required commands:
-1) NEWPRODUCT <name> - Create new product on DB, always use unique name of product.
-2) PURCHASE <name> <amount> <price> <date> - Yse for bye goods. Input product name, amount, unit price and date.
-3) DEMAND <name> <amount> <price> <date> - For sell goods. Input product name, amount, unit price and date.
-4) SALESREPORT <name> <date> - Calculate profit. Input product name and report date. 
+1) NEWPRODUCT <name> - Create new product on DB, always use unique name of product. (Output OK or ERROR)
+2) PURCHASE <name> <amount> <price> <date> - Yse for bye goods. Input product name, amount, unit price and date. (Output OK or ERROR)
+3) DEMAND <name> <amount> <price> <date> - For sell goods. Input product name, amount, unit price and date. (Output OK or ERROR)
+4) SALESREPORT <name> <date> - Calculate profit. Input product name and report date. (Output ERROR or report)
+    
 
 
 
