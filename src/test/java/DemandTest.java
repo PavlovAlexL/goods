@@ -15,11 +15,11 @@ import static org.hamcrest.Matchers.is;
 
 public class DemandTest {
 
-    static DBService dbService;
-    static Input input;
-    static Goods goods;
-    static StartUi startUi;
-    static PrintStream stdout = System.out;
+    private static DBService dbService;
+    private static Input input;
+    private static Goods goods;
+    private static StartUi startUi;
+    private static PrintStream stdout = System.out;
 
     /**
      * Подготовка тестовой среды.
@@ -37,15 +37,12 @@ public class DemandTest {
      */
     @AfterClass
     public static void backClass() {
-        //dbService.dropAllData();
         startUi.stop();
-        System.out.flush();
     }
 
     @After
     public void backTest() {
         System.setOut(stdout);
-        //dbService.dropAllData();
     }
 
     @Test

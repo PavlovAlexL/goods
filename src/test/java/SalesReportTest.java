@@ -29,7 +29,7 @@ public class SalesReportTest {
         input = new StubInput(new ValidateInput());
         goods = new Goods(dbService.getConnection());
         startUi = new StartUi(dbService, input, goods);
-        
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         startUi.initTest("NEWPRODUCT iphone");
         startUi.initTest("NEWPRODUCT iphone2");

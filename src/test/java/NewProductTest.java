@@ -12,12 +12,10 @@ import static org.hamcrest.Matchers.is;
 
 public class NewProductTest {
 
-    static DBService dbService;
-    static Input input;
-    static Goods goods;
-    static StartUi startUi;
-    static PrintStream stdout = System.out;
-
+    private static DBService dbService;
+    private static Input input;
+    private static Goods goods;
+    private static StartUi startUi;
 
     @Test
     public void whenAddNewProductThenOutputIsOk() {
