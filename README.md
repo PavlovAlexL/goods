@@ -1,9 +1,7 @@
-##ProjectOne - my first REST-full API.
-
 ### Installation
 1. Install JDK 1.8
 2. Add local variables
-Name: ```JAVA_HOME```, Value:```C:\Program Files\Java\jdk1.8.0_131```
+Name: ```JAVA_HOME```, Value:```C:\Program Files\Java\jdk1.8.0_211```
 and add to path:```;%JAVA_HOME%\bin```
 Check installation:in cmd ```echo %JAVA_HOME%```
 You must get ```java -version```
@@ -23,7 +21,7 @@ Ok->Open as Project
 ###Using
 You must use only required commands:
 1) NEWPRODUCT <name> - Create new product on DB, always use unique name of product. (Output OK or ERROR)
-2) PURCHASE <name> <amount> <price> <date> - Yse for bye goods. Input product name, amount, unit price and date. (Output OK or ERROR)
+2) PURCHASE <name> <amount> <price> <date> - Use for bye goods. Input product name, amount, unit price and date. (Output OK or ERROR)
 3) DEMAND <name> <amount> <price> <date> - For sell goods. Input product name, amount, unit price and date. (Output OK or ERROR)
 4) SALESREPORT <name> <date> - Calculate profit. Input product name and report date. (Output ERROR or report)
     
